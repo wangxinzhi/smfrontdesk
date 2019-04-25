@@ -15,7 +15,7 @@ import VueResource from '../node_modules/vue-resource'
 
 import i18n from './lang' // Internationalization
 import '@/icons' // icon
-// mport '@/permission' // permission control
+// import '@/permission' // permission control
 
 Vue.use(ElementUI, {
   i18n: (key, value) => i18n.t(key, value)

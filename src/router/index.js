@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import login from '@/views/login/login'
-import home from '@/components/home'
 import layout from '@/views/layout/Layout'
 
 Vue.use(Router)
@@ -20,28 +19,21 @@ export const constantRouterMap = [
     hidden: true
   },
   {
-    path: '/home',
-    name: 'home',
-    component: home,
-    hidden: true
-  },
-  {
     path: '/redirect',
     component: layout,
     hidden: true
   },
 
   {
-    path: '/admin',
+    path: '',
     component: layout,
-    redirect: '/admin/dashboard',
-    name: 'Dashboard',
+    redirect: 'dashboard',
     children: [
       {
         path: 'dashboard',
-        // component: () => import('@/views/dashboard/index'),
+        component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+        meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
       }
     ]
   },
@@ -51,7 +43,7 @@ export const constantRouterMap = [
     component: layout,
     children: [
       {
-        path: 'https://github.com/TyCoding/tumo-vue',
+        path: 'https://github.com/wangxinzhi/screenmanager',
         meta: { title: 'github', icon: 'github' }
       }
     ]

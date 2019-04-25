@@ -3,6 +3,7 @@
  */
 
 export function isvalidUsername (str) {
-  const valid_map = ['tycoding', 'editor', 'admin']
+  // eslint-disable-next-line camelcase
+  const valid_map = ['tycoding', 'editor', 'admin', 'check1']
   return valid_map.indexOf(str.trim()) >= 0
 }

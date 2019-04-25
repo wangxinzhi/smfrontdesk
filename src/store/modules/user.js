@@ -30,8 +30,8 @@ const user = {
     Login ({ commit }, userInfo) { // { commit } 是 ES2015 的 参数解构 ; action 的处理函数返回的 Promise
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
-          console.log('store: Login: then: After login function')
+        login(username, userInfo.password, userInfo.rememberMe).then(response => {
+          console.log('store: user.js: Login: then: After login function')
           console.log(response)
           const data = response.data
           console.log('NAME: ' + data.data)
@@ -40,7 +40,7 @@ const user = {
           commit('SET_TOKEN', data.token)
           resolve()
         }).catch(error => {
-          console.log('store: Login: then: catch')
+          console.log('store: user.js: Login: then: catch')
           reject(error)
           console.log(error)
         })
@@ -52,13 +52,13 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           const data = response.data
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
+          if (data.data && data.data.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', data.data)
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-          commit('SET_NAME', data.data)
-          commit('SET_AVATAR', data.avatar)
+          commit('SET_NAME', data.token)
+          // commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {
           reject(error)

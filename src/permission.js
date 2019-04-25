@@ -10,17 +10,22 @@ const whiteList = ['/login', '/404'] // no redirect whitelist
 router.beforeEach((to, from, next) => { // 跳转之前执行 to 即将进入的路由对象； from 当前导航即将离开的路由； next :function,进行管道中的一个钩子,如果执行完,则导航状态是confirmed; 否则为false, 终止导航
   NProgress.start()
   if (getToken()) {
+    console.log('HAVE TOKEN')
+    console.log(getToken())
+    console.log(to.path)
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
+      // next({path: '/login'})
       next({path: '/redirect'})
       NProgress.done()
     } else {
       if (store.getters.roles.length === 0) {
+        console.log('Get User Info.')
         store.dispatch('GetInfo').then(res => {
           next()
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
-            Message.error('Verification failed, please login again' || err)
+            Message.error('请重新登陆!!!' || err)
             next()
           })
         })
@@ -30,6 +35,7 @@ router.beforeEach((to, from, next) => { // 跳转之前执行 to 即将进入的
     }
   } else {
     /* has no token */
+    console.log('HAVE NO TOKEN')
     if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {

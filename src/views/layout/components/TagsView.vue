@@ -12,7 +12,8 @@
         @click.middle.native="closeSelectedTag(tag)"
         @contextmenu.prevent.native="openMenu(tag,$event)">
         {{ generateTitle(tag.title) }}
-        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+        <!--span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" /-->
+        <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
@@ -35,7 +36,8 @@ export default {
       visible: false,
       top: 0,
       left: 0,
-      selectedTag: {}
+      selectedTag: {},
+      affixTags: []
     }
   },
   computed: {
@@ -57,6 +59,7 @@ export default {
     }
   },
   mounted() {
+    this.initTags() // 2019/4/25
     this.addViewTags()
   },
   methods: {
@@ -64,6 +67,38 @@ export default {
     isActive(route) {
       return route.path === this.$route.path
     },
+    
+    filterAffixTags(routes, basePath = '/') { // 2019/4/25
+      let tags = []
+      routes.forEach(route => {
+        if (route.meta && route.meta.affix) {
+          const tagPath = path.resolve(basePath, route.path)
+          tags.push({
+            fullPath: tagPath,
+            path: tagPath,
+            name: route.name,
+            meta: { ...route.meta }
+          })
+        }
+        if (route.children) {
+          const tempTags = this.filterAffixTags(route.children, route.path)
+          if (tempTags.length >= 1) {
+            tags = [...tags, ...tempTags]
+          }
+        }
+      })
+      return tags
+    },
+    initTags() {
+      const affixTags = this.affixTags = this.filterAffixTags(this.routes)
+      for (const tag of affixTags) {
+        // Must have tag name
+        if (tag.name) {
+          this.$store.dispatch('addVisitedView', tag)
+        }
+      }
+    }, //2019/4/25
+
     addViewTags() {
       const { name } = this.$route
       if (name) {

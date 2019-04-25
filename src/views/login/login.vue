@@ -5,7 +5,6 @@
                 <img :src="bear"/>
             </div>
             <h3 class="title">中原工学院电子屏幕管理系统</h3>
-
             <el-form-item prop="username">
                 <span class="svg-container">
                     <svg-icon icon-class="user"/>
@@ -19,7 +18,6 @@
                     placeholder="username" 
                     clearable="clearable"/>
             </el-form-item>
-
             <el-form-item prop="password">
                 <span class="svg-container">
                     <svg-icon icon-class="password"/>
@@ -37,7 +35,9 @@
                     <svg-icon icon-class="pwdType === 'password' ? 'eye' : 'eye-open'"/>
                 </span>
             </el-form-item>
-
+            <el-form-item>
+                <el-checkbox class="check" v-model="loginForm.rememberMe">记住我</el-checkbox>
+            </el-form-item>
             <el-form-item>
                 <el-button :loading="loading" type="primary" style="width: 100%;" @click.native.prevent="handleLogin" >
                     Sigin In
@@ -81,7 +81,8 @@ export default {
             bear: 'http://cdn.tycoding.cn/normal.0447fe9.png',
             loginForm: {
                 username: 'admin',
-                password: 'admin'
+                password: 'admin',
+                rememberMe: false
             },
             LoginRules: {
                 username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -126,6 +127,7 @@ export default {
                 if (valid) {
                     this.loading = true
                     console.log('Begin to login')
+                    console.log(this.loginForm)
                     this.$store.dispatch('Login', this.loginForm).then(() => {
                         console.log('Get Info/Succeed Login')
                         this.loading = false

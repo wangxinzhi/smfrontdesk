@@ -16,7 +16,6 @@ service.interceptors.request.use(
     console.log('request.js: before request')
     if (store.getters.token) {
       config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-      // config.params = getToken()
       console.log('interceptors config = ' + config.headers['X-Token'])
     }
     config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -34,9 +33,6 @@ service.interceptors.request.use(
 /** 在响应被then 或 catch 处理前拦截它们 */
 service.interceptors.response.use(
   response => {
-    /**
-         * code为非20000是抛错
-         */
     console.log('request.js')
     const res = response.data
     if (res.code !== 20000) {
@@ -46,7 +42,6 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
       // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         MessageBox.confirm(
