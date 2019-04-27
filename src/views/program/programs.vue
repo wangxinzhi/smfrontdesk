@@ -104,14 +104,17 @@
             <el-upload
                 class="upload-demo"
                 ref="upload"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                name="file"
+                action="http://localhost:8080/screen/upload.do"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :file-list="form.fileList"
+                :before-remove="beforeremove"
+                :on-success="handleSuccess"
                 :auto-upload="false">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png/doc文件，且不超过500kb</div>
+                <el-button slot="trigger" size="small" type="primary">1.选取文件</el-button>
+                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">2.上传到服务器(选取文件后，必点)</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png/doc文件，且不超过5M</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -403,7 +406,7 @@ import { Message } from 'element-ui';
           this.initializationData();
         },
         submitUpload() {
-            this.$refs.upload.submit();
+          this.$refs.upload.submit();
         },
         submitprogram() {
           this.$refs.addform.validate(valid => {
@@ -434,10 +437,19 @@ import { Message } from 'element-ui';
           })
         },
         handleRemove(file, fileList) {
-            console.log(file, fileList);
+          console.log('ON-REMOVE');
+          console.log(fileList);
         },
         handlePreview(file) {
+          console.log('FILE:');
             console.log(file);
+        },
+        handleSuccess(response, file, fileList) {
+          Message.success('图片上传成功.');
+          if(file.response.success) {
+            console.log(file.response.data.data);
+            this.form.fileList.push(file.response.data.data);
+          }
         },
         openEditDialogForm(index, row) {
           this.editDialogFormVisible = true;

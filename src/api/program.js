@@ -68,3 +68,15 @@ export function verifyProgram (verifyform) {
     }
   })
 }
+
+/** upload */
+
+export function upload (data) {
+  return request({
+    url: '/screen/upload.do',
+    method: 'post',
+    params: {
+      data
+    }
+  })
+}
