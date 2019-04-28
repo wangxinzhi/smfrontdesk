@@ -165,7 +165,7 @@ export const constantRouterMap = [
       {
         path: 'online',
         name: 'OnlineUsers',
-        component: () => import('@/views/program/programs'),
+        component: () => import('@/views/onlineuser/index'),
         meta: { title: 'OnlineUsers', icon: 'online-users' }
       },
       {

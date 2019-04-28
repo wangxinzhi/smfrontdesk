@@ -106,11 +106,14 @@
                 ref="upload"
                 name="file"
                 action="http://localhost:8080/screen/upload.do"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
+                :limit="3"
                 :file-list="form.fileList"
-                :before-remove="beforeremove"
+                :on-exceed="onExceed"
+                :before-upload="beforeUpload"
+                :on-preview="handlePreview"
                 :on-success="handleSuccess"
+                :on-remove="handleRemove"
+                :before-remove="beforeremove"
                 :auto-upload="false">
                 <el-button slot="trigger" size="small" type="primary">1.选取文件</el-button>
                 <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">2.上传到服务器(选取文件后，必点)</el-button>
@@ -167,7 +170,6 @@
 </template>
 
 <script>
-import { fail, throws } from 'assert';
 import { getProgramList, getScreens, addProgram, editProgram, deleteProgram, verifyProgram } from '@/api/program';
 import { Message } from 'element-ui';
     export default {
@@ -436,19 +438,37 @@ import { Message } from 'element-ui';
             }
           })
         },
-        handleRemove(file, fileList) {
+        onExceed(files, fileList) { // 文件超出限制个数时的钩子函数
+          Message.info('最多只能上传3个文件');
+        },
+        beforeUpload(file) { // 上传文件前的钩子函数, 参数为上传的文件, 若返回false 或者返回Promise且被reject, 则停止上传
+          console.log('BEFORE UPLOAD');
+          console.log(file);
+          let isLt5M = file.size / 1024 / 1024 < 5;
+          console.log(file.size / 1024 / 1024);
+          console.log(isLt5M);
+          if (!isLt5M) {
+            Message.error('上传图片大小不能超过 5 MB !!!');
+          }
+          return isLt5M;
+        },
+        handleRemove(file, fileList) { // 删除文件前的钩子函数
           console.log('ON-REMOVE');
           console.log(fileList);
+          Message.info('已移除文件.');
         },
-        handlePreview(file) {
+        handlePreview(file) { // 点击文件列表中已上传的文件时的钩子
           console.log('FILE:');
             console.log(file);
         },
-        handleSuccess(response, file, fileList) {
-          Message.success('图片上传成功.');
+        handleSuccess(response, file, fileList) { // 文件上传成功时的钩子 [ 需要重新测试 ]
           if(file.response.success) {
+            Message.success('图片上传成功.');
             console.log(file.response.data.data);
             this.form.fileList.push(file.response.data.data);
+            console.log()
+          } else {
+            Message.error('服务器未知错误, 请重新上传!!!');
           }
         },
         openEditDialogForm(index, row) {
