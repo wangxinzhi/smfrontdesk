@@ -20,9 +20,12 @@ export function getInfo (token) {
   })
 }
 
-export function logout () {
+export function logout (token) {
   return request({
-    url: '/screen/user/logout',
-    method: 'get'
+    url: '/screen/logout.do',
+    method: 'get',
+    params: {
+      token
+    }
   })
 }

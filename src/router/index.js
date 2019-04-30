@@ -84,7 +84,7 @@ export const constantRouterMap = [
         path: 'add',
         name: 'addUser',
         component: () => import('@/views/user/create'),
-        meta: { title: 'addUser', icon: 'users' }
+        meta: { title: 'AddUser', icon: 'users' }
       }
       /* {
         path: 'edit',
@@ -109,7 +109,7 @@ export const constantRouterMap = [
         path: 'list',
         name: 'list',
         component: () => import('@/views/role/index'),
-        meta: { title: 'PrivilegeManagement', icon: '' }
+        meta: { title: 'PrivilegeMG', icon: '' }
       }
     ]
   },
@@ -124,7 +124,7 @@ export const constantRouterMap = [
         path: 'list',
         name: 'list',
         component: () => import('@/views/organization/index'),
-        meta: { title: 'organizationTree', icon: '' }
+        meta: { title: 'OrganizationTree', icon: '' }
       }
     ]
   },
@@ -134,7 +134,7 @@ export const constantRouterMap = [
     component: layout,
     name: 'program',
     meta: {
-      title: 'ProgramManagement',
+      title: 'ProgramMG',
       icon: 'program'
     },
     children: [
@@ -142,13 +142,13 @@ export const constantRouterMap = [
         path: 'add',
         name: 'addProgram',
         component: () => import('@/views/program/programs'),
-        meta: { title: 'addProgram', icon: 'addpage' }
+        meta: { title: 'AddProgram', icon: 'addpage' }
       },
       {
         path: 'verify',
         name: 'verifyProgram',
         component: () => import('@/views/program/verify'),
-        meta: { title: 'verifyProgram', icon: 'audited' }
+        meta: { title: 'VerifyProgram', icon: 'audited' }
       }
     ]
   },
@@ -158,20 +158,20 @@ export const constantRouterMap = [
     component: layout,
     name: 'system',
     meta: {
-      title: 'SystemMonitoring',
+      title: 'SystemMonitor',
       icon: 'system-s'
     },
     children: [
       {
         path: 'online',
         name: 'OnlineUsers',
-        component: () => import('@/views/onlineuser/index'),
+        component: () => import('@/views/monitor/onlineuser'),
         meta: { title: 'OnlineUsers', icon: 'online-users' }
       },
       {
         path: 'landinglog',
         name: 'LandingLog',
-        component: () => import('@/views/program/verify'),
+        component: () => import('@/views/monitor/landlog'),
         meta: { title: 'LandingLog', icon: 'landing-log' }
       }
     ]

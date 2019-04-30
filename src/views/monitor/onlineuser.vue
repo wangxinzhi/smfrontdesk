@@ -10,6 +10,7 @@
 
       <el-table
         :data="tableData"
+        border
         style="width: 100%">
         <el-table-column
           prop="username"
@@ -65,20 +66,20 @@
 </template>
 
 <script>
-import { list } from '@/api/onlineuser';
+import { list, forceLogout } from '@/api/monitor';
 import { Message } from 'element-ui';
     export default {
       data() {
         return {
           tableData: [{
-              id: 'ss',
-              username: 'ss',
-              host: 'ss',
-              adress: 'ss',
-              startTime: 'ss',
-              endTime: 'ss',
-              timeout: 's',
-              status: 's'
+              id: 'sessionid',
+              username: 'unkonwn',
+              host: 'unkonwn',
+              address: 'unknown',
+              startTime: 'unkonwn',
+              endTime: 'unkonwn',
+              timeout: 'unkonwn',
+              status: 'unkonwn'
           }]
         }
       },
@@ -100,6 +101,15 @@ import { Message } from 'element-ui';
                   Message.error('网络异常!!!');
               }
             })
+        },
+        forcelogout(index, row) {
+          forceLogout(row.id).then(response => {
+            if (response.code == 20000) {
+              Message.success('用户强制下线成功.');
+            } else {
+              Message.error('未知错误,请联系管理员!!!');
+            }
+          })
         },
         refresh() {
             this.initializationData();

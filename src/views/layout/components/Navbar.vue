@@ -33,7 +33,7 @@
                             {{ $t('navbar.dashboard') }}
                         </el-dropdown-item>
                     </router-link>
-                    <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
+                    <a target="_blank" href="https://github.com/wangxinzhi/screenmanager">
                         <el-dropdown-item>
                             {{ $t('navbar.github') }}
                         </el-dropdown-item>
@@ -55,6 +55,7 @@
     import SizeSelect from '@/components/SizeSelect'
     import LangSelect from '@/components/LangSelect'
     import ThemePicker from '@/components/ThemePicker'
+import { Message } from 'element-ui';
 
     export default {
         components: {
@@ -79,7 +80,9 @@
             },
             logout() {
                 this.$store.dispatch('LogOut').then(() => {
-                    location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+                    Message.success('已安全退出.');
+                    this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+                    location.reload();// In order to re-instantiate the vue-router object to avoid bugs
                 })
             }
         }

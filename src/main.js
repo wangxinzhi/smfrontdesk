@@ -7,6 +7,7 @@ import 'normalize.css/normalize.css'// A modern alternative to CSS resets
 import ElementUI from '../node_modules/element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss' // global css
+import CKEditor from '../node_modules/@ckeditor/ckeditor5-vue'
 
 import App from './App'
 import router from './router'
@@ -21,6 +22,7 @@ Vue.use(ElementUI, {
   i18n: (key, value) => i18n.t(key, value)
 })
 Vue.use(VueResource)
+Vue.use(CKEditor)
 
 Vue.config.productionTip = false
 

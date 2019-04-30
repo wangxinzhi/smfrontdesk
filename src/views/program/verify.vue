@@ -104,15 +104,25 @@
         </el-tab-pane>
         <el-tab-pane label="2.图片/视频等资源" name="second">
           <!--carousel-->
-          <el-carousel indicator-position="outside" v-if="carousel" >
-            <el-carousel-item v-for="item in 4" :key="item">
+          <el-carousel indicator-position="outside" v-if="pic" >
+            <el-carousel-item v-for="item in form.files" :key="item">
+              <img :src="item" class="image" width="100%" height="100%">
               <h3>{{ item }}</h3>
             </el-carousel-item>
           </el-carousel>
           <!--ckeditor-->
-          <ckeditor name="ckeditor" id="ckeditor" rows="10" cols="80" v-if="editor">
+          <!--ckeditor name="ckeditor" id="ckeditor" rows="10" cols="80" v-if="editor">
             This is my textarea to be replaced with CKEditor.
+          </ckeditor-->
+          <!--div id="CKEditor" v-if="document">
+            <div id="toolbar-container"></div>
+            <div id="editor">
+              <p>This is my textarea to be replaced with CKEditor.</p>
+            </div>
+          </div-->
+          <ckeditor>
           </ckeditor>
+          <!-- videoplayer -->
         </el-tab-pane>
         <el-tab-pane label="3.节目调度表" name="third">节目调度表</el-tab-pane>
         <el-tab-pane label="4.填写审核信息" name="fourth">
@@ -145,6 +155,8 @@
 <script>
 import { getVerifyList, verifyProgram } from '@/api/program';
 import { Message } from 'element-ui';
+import { ckeditor } from './components/CKEditor'
+import { error } from 'util';
     export default {
       data() {
         return {
@@ -155,25 +167,25 @@ import { Message } from 'element-ui';
             ptype: '图片',
             starttime: '2016-05-02',
             endtime: '2016-05-02',
-            publisher: '王小虎',
+            publisher: '王某某',
             state: '待审核'
           }, {
             id: 2,
             pname: '安全宣传',
-            pcontent: '消防宣传',
-            ptype: '图片',
+            pcontent: '安全宣传',
+            ptype: '文档',
             starttime: '2016-05-02',
             endtime: '2016-05-02',
-            publisher: '王小虎',
+            publisher: '李某某',
             state: '待审核'
           }, {
             id: 3,
-            pname: '消防宣传',
-            pcontent: '消防宣传',
-            ptype: '图片',
+            pname: '考场规范宣传',
+            pcontent: '考场规范宣传',
+            ptype: '视频',
             starttime: '2016-05-02',
             endtime: '2016-05-02',
-            publisher: '王小虎',
+            publisher: '刘某某',
             state: '待审核'
           }, {
             id: 4,
@@ -182,12 +194,13 @@ import { Message } from 'element-ui';
             ptype: '图片',
             starttime: '2016-05-02',
             endtime: '2016-05-02',
-            publisher: '王小虎',
+            publisher: '黄某某',
             state: '待审核'
           }],
           verifyDialogFormVisible: false, // 审核 dialogFormVisible
-          carousel: false,
-          editor: true,
+          pic: true, // 图片
+          document: false, // 文本
+          player: false, // 播放器
           form: {
             pname: '',
             publisher: '',
@@ -195,7 +208,10 @@ import { Message } from 'element-ui';
             ptypeStr: '',
             rangetime: '',
             pcontent: '',
-            selectedscreens: ''
+            selectedscreens: '',
+            files: [
+              "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+            ]
           },
           verifyform: {
             pid: '',
@@ -205,7 +221,11 @@ import { Message } from 'element-ui';
           activeName: 'first', // el-tab-pane 默认设置 
           examinevalue: false, // 审核Boolean值 
           feedback: '', // 节目审核反馈信息
+          editor: null
         }
+      },
+      mounted() {
+        this.initCKEditor();
       },
       created() {
         this.initializationData();
@@ -279,6 +299,29 @@ import { Message } from 'element-ui';
           this.form.selectedscreens = row.screenlist;
           this.form.rangetime = row.starttime_localstr + '--' + row.endtime_localstr;
           this.form.pcontent = row.pcontent;
+          this.form.files = row.files;
+          switch(row.ptype) {
+            case '图片':
+              this.pic = true;
+              this.document = false;
+              this.player = false;
+              break;
+            case '文档':
+              this.document = true;
+              this.pic = false;
+              this.player = false;
+              break;
+            case '视频':
+              this.player = true;
+              this.pic = false;
+              this.document = false;
+              break;
+            default: 
+              this.pic = true;
+              this.document = false;
+              this.player = false;
+              break;
+          }
         },
         verify() {
           this.verifyDialogFormVisible = false;
@@ -296,13 +339,21 @@ import { Message } from 'element-ui';
           //console.log('buttonenter')
         },
         cardenter() {
-
         },
         buttonenter() {
-
         },
         buttonleave() {
-
+        },
+        initCKEditor() {
+          console.error("CKEditor");
+          decoupledEditor.create(document.querySelector('#editor')).then(editor => {
+            let toolbarContainer = document.querySelector('#toolbar-container');
+            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+            this.editor = editor;
+          }).catch(error => {
+            console.error("CKEditor");
+            console.error(error);
+          });
         }
       },
     }
