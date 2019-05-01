@@ -120,9 +120,13 @@
               <p>This is my textarea to be replaced with CKEditor.</p>
             </div>
           </div-->
-          <ckeditor>
-          </ckeditor>
+          <div id="CKEditor" v-if="document">
+            <ckeditor/>
+          </div>
           <!-- videoplayer -->
+          <div id="Video" v-if="player">
+            <videoPlayer style="width:100%"/>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="3.节目调度表" name="third">节目调度表</el-tab-pane>
         <el-tab-pane label="4.填写审核信息" name="fourth">
@@ -155,10 +159,15 @@
 <script>
 import { getVerifyList, verifyProgram } from '@/api/program';
 import { Message } from 'element-ui';
-import { ckeditor } from './components/CKEditor'
+import ckeditor from '@/components/CKEditor';
+import videoPlayer from '@/components/Video'
 import { error } from 'util';
     export default {
-      data() {
+      components: {
+        ckeditor,
+        videoPlayer
+      },
+      data: function() {
         return {
           tableData: [{
             id: 1,
@@ -223,9 +232,6 @@ import { error } from 'util';
           feedback: '', // 节目审核反馈信息
           editor: null
         }
-      },
-      mounted() {
-        this.initCKEditor();
       },
       created() {
         this.initializationData();
